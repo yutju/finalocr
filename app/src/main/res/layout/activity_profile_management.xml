@@ -61,13 +61,38 @@
         android:layout_marginTop="20dp"
         android:inputType="textPassword" />
 
+    <!-- 발급일자 입력 필드 추가 -->
+    <EditText
+        android:id="@+id/editTextIssueDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="발급일자 (YYYY.MM.DD)"
+        android:padding="16dp"
+        android:layout_below="@id/editTextConfirmNewPassword"
+        android:layout_marginTop="20dp"
+        android:inputType="date" />
+
     <Button
         android:id="@+id/save_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="저장"
-        android:layout_below="@id/editTextConfirmNewPassword"
+        android:layout_below="@id/editTextIssueDate"
         android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:backgroundTint="#4169E1"
+        android:textColor="#FFFFFF" />
+
+    <!-- 회원 탈퇴 버튼 추가 -->
+    <Button
+        android:id="@+id/delete_account_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="회원 탈퇴"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
+        android:backgroundTint="#FF0000"
+        android:textColor="#FFFFFF" />
 
 </RelativeLayout>

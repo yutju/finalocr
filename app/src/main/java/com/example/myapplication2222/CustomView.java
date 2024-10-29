@@ -25,16 +25,16 @@ public class CustomView extends View {
         backgroundImage = ContextCompat.getDrawable(context, R.drawable.mart_img_example);
 
         // 비콘의 고정된 위치와 색상 설정
-        beaconX[0] = 0; // 첫 번째 비콘 X 위치
-        beaconY[0] = 3; // 첫 번째 비콘 Y 위치
+        beaconX[0] = 1.0f; // 첫 번째 비콘 X 위치
+        beaconY[0] = 2.8f; // 첫 번째 비콘 Y 위치
         beaconColors[0] = Color.RED; // 첫 번째 비콘 색상
 
-        beaconX[1] = 1.5f; // 두 번째 비콘 X 위치
-        beaconY[1] = 0; // 두 번째 비콘 Y 위치
+        beaconX[1] = 2.5f; // 두 번째 비콘 X 위치
+        beaconY[1] = 0.3f; // 두 번째 비콘 Y 위치
         beaconColors[1] = Color.YELLOW; // 두 번째 비콘 색상
 
-        beaconX[2] = 3; // 세 번째 비콘 X 위치
-        beaconY[2] = 3; // 세 번째 비콘 Y 위치
+        beaconX[2] = 4.0f; // 세 번째 비콘 X 위치
+        beaconY[2] = 2.8f; // 세 번째 비콘 Y 위치
         beaconColors[2] = Color.GREEN; // 세 번째 비콘 색상
     }
 
@@ -51,8 +51,8 @@ public class CustomView extends View {
         // 고정된 비콘 위치 그리기
         for (int i = 0; i < 3; i++) {
             // 비콘 위치를 화면 크기에 맞춰 변환
-            float beaconXScreen = (float) (beaconX[i] / 3 * getWidth());
-            float beaconYScreen = (float) ((3 - beaconY[i]) / 3 * getHeight());
+            float beaconXScreen = (float) (beaconX[i] / 5 * getWidth()); // MART_WIDTH 기준으로 변환
+            float beaconYScreen = (float) ((3 - beaconY[i]) / 3 * getHeight()); // MART_HEIGHT 기준으로 변환
             paint.setColor(beaconColors[i]);
             paint.setStyle(Paint.Style.FILL);
             // 고정된 비콘 위치 점으로 그리기

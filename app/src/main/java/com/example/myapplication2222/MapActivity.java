@@ -143,11 +143,11 @@ class ParticleFilter {
     private double[] getBeaconPosition(int beaconId) {
         switch (beaconId) {
             case 1:
-                return new double[]{0, MapActivity.MART_HEIGHT};
+                return new double[]{1.5, 2.5};
             case 2:
-                return new double[]{MapActivity.MART_WIDTH / 2, 0};
+                return new double[]{2.5, 0.5};
             case 3:
-                return new double[]{MapActivity.MART_WIDTH, MapActivity.MART_HEIGHT};
+                return new double[]{3.5, 2.5};
             default:
                 return new double[]{0, 0};
         }
@@ -204,7 +204,7 @@ public class MapActivity extends AppCompatActivity implements BeaconConsumer {
     private static final int TARGET_MAJOR_VALUE = 10011;
     private static final double A = -70; // RSSI 상수
     private static final double N = 2.5; // 거리 감쇠 지수
-    public static final double MART_WIDTH = 3.0;
+    public static final double MART_WIDTH = 5.0;
     public static final double MART_HEIGHT = 3.0;
     private static final double MAX_DISTANCE = 3.0; // 최대 허용 거리
     private KalmanFilter kalmanFilterX;
@@ -257,7 +257,6 @@ public class MapActivity extends AppCompatActivity implements BeaconConsumer {
 
         runButton = findViewById(R.id.button);
         runButton.setOnClickListener(v -> handler.sendEmptyMessage(0));
-
 
     }
 
@@ -353,13 +352,13 @@ public class MapActivity extends AppCompatActivity implements BeaconConsumer {
         double[] beaconPosition;
         switch (beaconId) {
             case "beacon1":
-                beaconPosition = new double[]{0, MART_HEIGHT};
+                beaconPosition = new double[]{1.5, 2.5};
                 break;
             case "beacon2":
-                beaconPosition = new double[]{MART_WIDTH / 2, 0};
+                beaconPosition = new double[]{2.5, 0.5};
                 break;
             case "beacon3":
-                beaconPosition = new double[]{MART_WIDTH, MART_HEIGHT};
+                beaconPosition = new double[]{3.5, 2.5};
                 break;
             default:
                 return MAX_DISTANCE; // 알 수 없는 비콘의 경우 최대 거리 반환
@@ -408,18 +407,18 @@ public class MapActivity extends AppCompatActivity implements BeaconConsumer {
 
                     switch (minor) {
                         case 1:
-                            beaconX = 0;
-                            beaconY = MART_HEIGHT;
+                            beaconX = 1;
+                            beaconY = 2.8;
                             color = Color.RED;
                             break;
                         case 2:
-                            beaconX = MART_WIDTH / 2;
-                            beaconY = 0;
+                            beaconX = 2.5;
+                            beaconY = 0.3;
                             color = Color.YELLOW;
                             break;
                         case 3:
-                            beaconX = MART_WIDTH;
-                            beaconY = MART_HEIGHT;
+                            beaconX = 4;
+                            beaconY = 2.8;
                             color = Color.GREEN;
                             break;
                         default:
@@ -427,7 +426,7 @@ public class MapActivity extends AppCompatActivity implements BeaconConsumer {
                     }
 
                     float beaconXScreen = (float) (beaconX / MART_WIDTH * customView.getWidth());
-                    float beaconYScreen = (float) ((MART_HEIGHT - beaconY) / MART_HEIGHT * customView.getHeight());
+                    float beaconYScreen = (float) (beaconY / MART_HEIGHT * customView.getHeight());
                     float radius = (float) (distance / Math.max(MART_WIDTH, MART_HEIGHT) * Math.max(customView.getWidth(), customView.getHeight()));
 
                     customView.updateBeaconPosition(minor - 1, beaconXScreen, beaconYScreen, radius, color);
@@ -496,7 +495,7 @@ public class MapActivity extends AppCompatActivity implements BeaconConsumer {
     }
 
     private double[] calculateUserPosition(Map<Integer, Double> distances) {
-        double[][] beacons = {{0, MART_HEIGHT}, {MART_WIDTH / 2, 0}, {MART_WIDTH, MART_HEIGHT}};
+        double[][] beacons = {{1.5, 2.5}, {2.5, 0.5}, {3.5, 2.5}};
 
         // 삼변측량법을 사용한 위치 추정
         double[] trilaterationPosition = trilaterate(distances);
@@ -582,7 +581,7 @@ public class MapActivity extends AppCompatActivity implements BeaconConsumer {
     }
 
     private double[] trilaterate(Map<Integer, Double> distances) {
-        double[][] beacons = {{0, MART_HEIGHT}, {MART_WIDTH / 2, 0}, {MART_WIDTH, MART_HEIGHT}};
+        double[][] beacons = {{1.5, 2.5}, {2.5, 0.5}, {3.5, 2.5}};
 
         // 삼변측량 계산
         double[] centroid = {0, 0};
@@ -638,3 +637,4 @@ public class MapActivity extends AppCompatActivity implements BeaconConsumer {
         if (beaconManager.isBound(this)) beaconManager.unbind(this);
     }
 }
+
