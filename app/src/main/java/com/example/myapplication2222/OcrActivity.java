@@ -405,7 +405,7 @@ public class OcrActivity extends AppCompatActivity {
     // 주민등록번호 찾기 추가
     private String findSSN(String text) {
         // 모든 공백 제거
-        text = text.replaceAll("\\s+", "");
+        text = text.replaceAll("\\s+", "");  // 공백 제거
 
         // 주민등록번호 형식 (YYMMDD-XXXXXXX) 또는 공백과 하이픈이 포함된 형식도 허용
         Pattern ssnPattern = Pattern.compile("\\d{6}-?\\d{7}");
@@ -419,11 +419,14 @@ public class OcrActivity extends AppCompatActivity {
 
     // 생년월일 찾기 개선
     private String findDateOfBirth(String text) {
-        // 생년월일 형식 (YYMMDD)을 추출
-        Pattern dobPattern = Pattern.compile("(\\d{2}[01]\\d[0-3]\\d)");
-        Matcher dobMatcher = dobPattern.matcher(text);
-        if (dobMatcher.find()) {
-            String year = dobMatcher.group(1).substring(0, 2);
+        // 주민등록번호에서 생년월일 추출
+        String ssn = findSSN(text);
+        if (ssn != null && ssn.length() == 13) {  // 주민등록번호가 올바르게 추출된 경우
+            String year = ssn.substring(0, 2);
+            String month = ssn.substring(2, 4);
+            String day = ssn.substring(4, 6);
+
+            // 2000년대생인지 1900년대생인지 결정 (기준은 현재 연도)
             int currentYear = Calendar.getInstance().get(Calendar.YEAR) % 100;
             int parsedYear = Integer.parseInt(year);
             String fullYear;
@@ -433,8 +436,6 @@ public class OcrActivity extends AppCompatActivity {
                 fullYear = "19" + year;
             }
 
-            String month = dobMatcher.group(1).substring(2, 4);
-            String day = dobMatcher.group(1).substring(4, 6);
             return fullYear + "년 " + Integer.parseInt(month) + "월 " + Integer.parseInt(day) + "일";
         }
         return null;
