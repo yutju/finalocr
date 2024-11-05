@@ -161,9 +161,9 @@ public class FaceVerificationActivity extends AppCompatActivity {
                 if (originalBitmap != null) {
                     Bitmap rotatedBitmap;
                     if (cameraSelector == CameraSelector.DEFAULT_FRONT_CAMERA) {
-                        rotatedBitmap = rotateBitmap(originalBitmap, 270);
+                        rotatedBitmap = rotateBitmap(originalBitmap, 180);
                     } else {
-                        rotatedBitmap = rotateBitmap(originalBitmap, 90);
+                        rotatedBitmap = rotateBitmap(originalBitmap, 180);
                     }
 
                     // 얼굴 감지 후 크롭

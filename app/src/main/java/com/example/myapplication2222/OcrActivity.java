@@ -263,7 +263,7 @@ public class OcrActivity extends AppCompatActivity {
                                 performAdultVerification(dob, name, ssnWithHyphen, currentUser, issueDate);
                             } else if (dob != null) {
                                 resultTextView.setText("미성년자입니다.");
-                                Toast.makeText(OcrActivity.this, "미성년자는 구매가 불가합니다.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(OcrActivity.this, "미성년자이시거나 생년월일이 제대로 추출되지 않았습니다.", Toast.LENGTH_SHORT).show();
                             } else {
                                 resultTextView.setText("생년월일을 찾을 수 없습니다.");
                                 Toast.makeText(OcrActivity.this, "생년월일을 찾을 수 없습니다. 신분증을 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
@@ -425,7 +425,13 @@ public class OcrActivity extends AppCompatActivity {
         if (dobMatcher.find()) {
             String year = dobMatcher.group(1).substring(0, 2);
             int currentYear = Calendar.getInstance().get(Calendar.YEAR) % 100;
-            String fullYear = (Integer.parseInt(year) <= currentYear) ? "20" + year : "19" + year;
+            int parsedYear = Integer.parseInt(year);
+            String fullYear;
+            if (parsedYear <= currentYear) {
+                fullYear = "20" + year;
+            } else {
+                fullYear = "19" + year;
+            }
 
             String month = dobMatcher.group(1).substring(2, 4);
             String day = dobMatcher.group(1).substring(4, 6);
@@ -433,7 +439,6 @@ public class OcrActivity extends AppCompatActivity {
         }
         return null;
     }
-
     // 이름 찾기
     private String findName(String text) {
         // 주민등록번호 패턴을 찾아서 그 위의 텍스트를 찾음
@@ -444,8 +449,14 @@ public class OcrActivity extends AppCompatActivity {
             int ssnStartIndex = ssnMatcher.start();
             String textBeforeSSN = text.substring(0, ssnStartIndex).trim();
             String[] lines = textBeforeSSN.split("\\n");
+
             if (lines.length > 0) {
                 String possibleName = lines[lines.length - 1].trim();
+
+                // 한글만 남기고 나머지 문자는 모두 제거
+                possibleName = possibleName.replaceAll("[^가-힣]", "");
+
+                // 이름이 비어 있지 않은 경우 반환
                 if (!possibleName.isEmpty()) {
                     return possibleName;
                 }
@@ -459,36 +470,33 @@ public class OcrActivity extends AppCompatActivity {
         // 모든 공백 제거
         text = text.replaceAll("\\s+", "");
 
-        // 주민등록증의 발급일자 패턴: 'yyyy.mm.dd.'
-        Pattern idCardIssueDatePattern = Pattern.compile("(\\d{4}[.])(0?\\d{1,2})([.])(0?\\d{1,2})([.])");
-        Matcher idCardMatcher = idCardIssueDatePattern.matcher(text);
+        // 유연한 발급일자 패턴: 'yyyy mm dd' 형식, 중간 구분자는 '.' 또는 ',' 등 다양하게 허용
+        Pattern generalIssueDatePattern = Pattern.compile("(\\d{4})[.,\\s]?(0?\\d{1,2})[.,\\s]?(0?\\d{1,2})");
 
-        // 운전면허증의 발급일자 패턴: 'yyyy.mm.dd.' 뒤에 발급 기관의 이름이 오는 경우
-        Pattern licenseIssueDatePattern = Pattern.compile("(\\d{4}[.])(0?\\d{1,2})([.])(0?\\d{1,2})([.])([가-힣]+청장|[가-힣]+관|[가-힣]+청|[가-힣]+소장|[가-힣]+구청장|[가-힣]+위원장)([^\\d]*)");
+        // 운전면허증의 발급일자 패턴: 'yyyy mm dd' 뒤에 발급 기관의 이름이 오는 경우
+        Pattern licenseIssueDatePattern = Pattern.compile(
+                "(\\d{4})[.,\\s]?(0?\\d{1,2})[.,\\s]?(0?\\d{1,2})([.,\\s]?)([가-힣]+청장|[가-힣]+관|[가-힣]+청|[가-힣]+소장|[가-힣]+구청장|[가-힣]+위원장)"
+        );
+
         Matcher licenseMatcher = licenseIssueDatePattern.matcher(text);
+        Matcher generalMatcher = generalIssueDatePattern.matcher(text);
 
         String issueDate = null;
 
-        // 운전면허증 패턴 검사 (발급 기관의 이름이 있는 경우만)
+        // 우선적으로 운전면허증 패턴 검사 (발급 기관의 이름이 있는 경우)
         if (licenseMatcher.find()) {
-            // 발급일자와 발급 기관의 이름이 모두 존재하는 경우에만 추출
-            if (licenseMatcher.group(6) != null) { // 발급 기관의 이름이 그룹 6에 해당
-                // 운전면허증의 발급일자 추출 (마지막 '.' 제거)
-                issueDate = licenseMatcher.group(1) + licenseMatcher.group(2) + "." + licenseMatcher.group(4);
-            }
+            issueDate = licenseMatcher.group(1) + "." + licenseMatcher.group(2) + "." + licenseMatcher.group(3);
         }
-        // 주민등록증 패턴 검사
-        else if (idCardMatcher.find()) {
-            // 주민등록증의 발급일자 추출 (마지막 '.' 제거)
-            issueDate = idCardMatcher.group(1) + licenseMatcher.group(2) + "." + idCardMatcher.group(4);
+        // 운전면허증이 아니면 일반 발급일자 패턴 검사
+        else if (generalMatcher.find()) {
+            issueDate = generalMatcher.group(1) + "." + generalMatcher.group(2) + "." + generalMatcher.group(3);
         }
 
-        // 발급일자가 추출된 경우, 두 자리 형식으로 변환
+        // 발급일자가 추출된 경우, 'yyyy.MM.dd' 형식으로 변환
         if (issueDate != null) {
             issueDate = formatIssueDate(issueDate);
         } else {
-            // 발급일자가 추출되지 않은 경우
-            System.out.println("발급일자 추출 실패");
+            Log.d("OcrActivity", "발급일자 추출 실패");
         }
 
         return issueDate;
@@ -510,6 +518,7 @@ public class OcrActivity extends AppCompatActivity {
         }
         return issueDate; // 기본적으로 입력받은 형식 그대로 반환
     }
+
 
     // 성인 여부 판단
     private boolean isMinor(String dob) {

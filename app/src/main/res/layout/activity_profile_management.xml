@@ -1,98 +1,113 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <EditText
-        android:id="@+id/editTextName"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="이름을 입력하세요"
-        android:padding="16dp"
-        android:layout_marginTop="50dp" />
+        android:layout_height="wrap_content"> <!-- height를 wrap_content로 설정 -->
 
-    <EditText
-        android:id="@+id/editTextEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="이메일"
-        android:padding="16dp"
-        android:layout_below="@id/editTextName"
-        android:layout_marginTop="20dp"
-        android:inputType="textEmailAddress"
-        android:enabled="false" />
+        <EditText
+            android:id="@+id/editTextName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="이름을 입력하세요"
+            android:padding="16dp"
+            android:layout_marginTop="50dp" />
 
-    <TextView
-        android:id="@+id/textViewSSN"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="주민등록번호: 데이터 검사중"
-        android:padding="16dp"
-        android:layout_below="@id/editTextEmail"
-        android:layout_marginTop="20dp" />
+        <EditText
+            android:id="@+id/editTextEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="이메일"
+            android:padding="16dp"
+            android:layout_below="@id/editTextName"
+            android:layout_marginTop="20dp"
+            android:inputType="textEmailAddress"
+            android:enabled="false" />
 
-    <EditText
-        android:id="@+id/editTextCurrentPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="현재 비밀번호"
-        android:padding="16dp"
-        android:layout_below="@id/textViewSSN"
-        android:layout_marginTop="20dp"
-        android:inputType="textPassword" />
+        <TextView
+            android:id="@+id/textViewSSN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="주민등록번호: 데이터 검사중"
+            android:padding="16dp"
+            android:layout_below="@id/editTextEmail"
+            android:layout_marginTop="20dp" />
 
-    <EditText
-        android:id="@+id/editTextNewPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="새 비밀번호"
-        android:padding="16dp"
-        android:layout_below="@id/editTextCurrentPassword"
-        android:layout_marginTop="20dp"
-        android:inputType="textPassword" />
+        <EditText
+            android:id="@+id/editTextCurrentPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="현재 비밀번호"
+            android:padding="16dp"
+            android:layout_below="@id/textViewSSN"
+            android:layout_marginTop="20dp"
+            android:inputType="textPassword" />
 
-    <EditText
-        android:id="@+id/editTextConfirmNewPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="새 비밀번호 확인"
-        android:padding="16dp"
-        android:layout_below="@id/editTextNewPassword"
-        android:layout_marginTop="20dp"
-        android:inputType="textPassword" />
+        <EditText
+            android:id="@+id/editTextNewPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="새 비밀번호"
+            android:padding="16dp"
+            android:layout_below="@id/editTextCurrentPassword"
+            android:layout_marginTop="20dp"
+            android:inputType="textPassword" />
 
-    <!-- 발급일자 입력 필드 추가 -->
-    <EditText
-        android:id="@+id/editTextIssueDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="발급일자 (YYYY.MM.DD)"
-        android:padding="16dp"
-        android:layout_below="@id/editTextConfirmNewPassword"
-        android:layout_marginTop="20dp"
-        android:inputType="date" />
+        <EditText
+            android:id="@+id/editTextConfirmNewPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="새 비밀번호 확인"
+            android:padding="16dp"
+            android:layout_below="@id/editTextNewPassword"
+            android:layout_marginTop="20dp"
+            android:inputType="textPassword" />
 
-    <Button
-        android:id="@+id/save_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="저장"
-        android:layout_below="@id/editTextIssueDate"
-        android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true"
-        android:backgroundTint="#4169E1"
-        android:textColor="#FFFFFF" />
+        <!-- 현재 발급일자 표시 TextView 추가 -->
+        <TextView
+            android:id="@+id/textViewCurrentIssueDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="현재 발급일자: 로드 중..."
+            android:padding="16dp"
+            android:layout_below="@id/editTextConfirmNewPassword"
+            android:layout_marginTop="20dp" />
 
-    <!-- 회원 탈퇴 버튼 추가 -->
-    <Button
-        android:id="@+id/delete_account_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="회원 탈퇴"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="16dp"
-        android:backgroundTint="#FF0000"
-        android:textColor="#FFFFFF" />
+        <!-- 발급일자 입력 필드 추가 -->
+        <EditText
+            android:id="@+id/editTextIssueDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="발급일자 (YYYY.MM.DD) 신분증 발급일자 변경을 원하시면 입력 후 저장해주세요."
+            android:padding="16dp"
+            android:layout_below="@id/textViewCurrentIssueDate"
+            android:layout_marginTop="20dp"
+            android:inputType="date" />
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/save_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="저장"
+            android:layout_below="@id/editTextIssueDate"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:backgroundTint="#4169E1"
+            android:textColor="#FFFFFF" />
+
+        <!-- 회원 탈퇴 버튼 추가 -->
+        <Button
+            android:id="@+id/delete_account_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="회원 탈퇴"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="16dp"
+            android:backgroundTint="#FF0000"
+            android:textColor="#FFFFFF" />
+
+    </RelativeLayout>
+</ScrollView>
